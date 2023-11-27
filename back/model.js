@@ -8,11 +8,9 @@ const mongoose = require('mongoose');
 
 // Create schema
 const CS3744Schema = new mongoose.Schema({
-    caption: String,
-    datasets: {
-        type: Array
-    }
+    fileName: String,
+    dataset: Object
 });
 
 // Export schema
-module.exports = mongoose.model('CS3744Schema', CS3744Schema, 'Datasets');
+module.exports = mongoose.model('CS3744Schema', CS3744Schema, 'Datasets_2');

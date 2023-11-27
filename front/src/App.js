@@ -3,7 +3,7 @@ Liam McBride (mailmcbride)
 */
 
 import { Box } from '@mui/system';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import BarChart from './BarChart';
 import Editor from './Editor';
@@ -15,8 +15,9 @@ function App() {
   //file and data state variables
   const [fileName, setFileName] = useState('pr1.json') //base data set
   const [metaData, setMetaData] = useState({ title: "", key: "", value: "" }) //meta data only really gets used on title or kv name changes. Looks to file data if these are empty
-  const [data, setData] = useState(fileName === "" ? [] : getDataSet(fileName).data) //checks if we have a valid filename to use
-  
+  console.log("info you want is here")
+  console.log(getDataSet(fileName))
+  const [data, setData] = useState(null) //checks if we have a valid filename to use
   //file changing and brushing state variables
   const [modified, setModified] = useState(fileName === "") //indicates it's not saved when new dataset is created
   const [selection, setSelection] = useState([]) //empty selection by default
@@ -49,6 +50,7 @@ function App() {
     }
 
     var keys = []
+    console.log(`Configuration was called. Here's data: ${data}`)
     //if metaData has a key or value name don't take from file
     if (metaData.key !== "" && metaData.value !== "") {
       keys = [metaData.key, metaData.value]
@@ -86,7 +88,7 @@ function App() {
     setModified(false)
     setMetaData({ title: "", key: "", value: "" })
   }
-  
+
   //event handlers
   //passed to editor to handle data additions
   //is also used as a helper function by handleDataChange
@@ -134,14 +136,14 @@ function App() {
   //[_ _ 2 _ 4 5 _]
   //[_ _ 2 _ 5 _]
 
-  function shiftSelection(index){
+  function shiftSelection(index) {
     var newSelection = []
-    selection.forEach((d,i) => {
-      if (index != d){
-        if (index < d){
+    selection.forEach((d, i) => {
+      if (index != d) {
+        if (index < d) {
           newSelection.push(d - 1)
         }
-        else{
+        else {
           newSelection.push(d)
         }
       }
@@ -171,7 +173,7 @@ function App() {
     //set new data
     setData(newData)
   }
-  
+
   //saves an existing data set
   const saveDataSet = () => {
     //recreates object from load.js with new data
@@ -216,7 +218,7 @@ function App() {
     var index = Number(e.target.id.split('_')[1])
     //is the element already selected? Are we adding or removing?
     var add = e.target.className.baseVal !== "selected-bar"
-    
+
     //generate a new array to properly set state
     var newSelection = selection
     if (add) {
@@ -281,56 +283,84 @@ function App() {
     }
   }
 
-  return (
-    <div className="App" style={{ paddingTop: 50 }}>
-      <Toolbar 
-        modified={modified} 
-        fileName={fileName} 
-        handleNew={newDataSet} 
-        handleSave={saveDataSet} 
-        handleLoad={updateFileName} 
-        handleSaveAs={saveDataSetAs}
-      />
-      <div className="app-child">
-        <Box sx={{
-          maxWidth: "400px",
-          height: "400px",
-          border: "black solid 2px",
-          borderRadius: "5px",
-          flexGrow: "1",
-          margin: "8px"
-        }}>
-          <Editor 
-            handleMetaDataChange={handleMetaDataChange} 
-            updateSelection={updateSelectionEditor} 
-            selection={selection} 
-            removeData={removeDataAtIndex} 
-            addData={updateData} 
-            dataChange={handleDataChange} 
-            data={data} 
-            conf={configuration()} 
-          />
-        </Box>
-        <Box sx={{
-          maxWidth: "400px",
-          height: "400px",
-          border: "black solid 2px",
-          borderRadius: "5px",
-          display: "inline-block",
-          flexGrow: "1",
-          margin: "8px"
-        }}>
-          <BarChart 
-            updateSelection={updateSelectionBar} 
-            selection={selection} 
-            conf={configuration()} 
-            data={data} 
-          />
-        </Box>
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const tData = await getDataSet(fileName);
+        // Set the state with the data from the API
+        setData(tData);
+        console.log("data is set")
+        console.log(tData)
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  const loadedDisplay = () => {
+    return (
+      <div className="App" style={{ paddingTop: 50 }}>
+        <Toolbar
+          modified={modified}
+          fileName={fileName}
+          handleNew={newDataSet}
+          handleSave={saveDataSet}
+          handleLoad={updateFileName}
+          handleSaveAs={saveDataSetAs}
+        />
+        <div className="app-child">
+          <Box sx={{
+            maxWidth: "400px",
+            height: "400px",
+            border: "black solid 2px",
+            borderRadius: "5px",
+            flexGrow: "1",
+            margin: "8px"
+          }}>
+            <Editor
+              handleMetaDataChange={handleMetaDataChange}
+              updateSelection={updateSelectionEditor}
+              selection={selection}
+              removeData={removeDataAtIndex}
+              addData={updateData}
+              dataChange={handleDataChange}
+              data={data}
+              conf={configuration()}
+            />
+          </Box>
+          <Box sx={{
+            maxWidth: "400px",
+            height: "400px",
+            border: "black solid 2px",
+            borderRadius: "5px",
+            display: "inline-block",
+            flexGrow: "1",
+            margin: "8px"
+          }}>
+            <BarChart
+              updateSelection={updateSelectionBar}
+              selection={selection}
+              conf={configuration()}
+              data={data}
+            />
+          </Box>
+        </div>
+
+
       </div>
+    )
+  }
 
-
-    </div>
+  const loadingDisplay = () => <div>Loading</div>
+  console.log(data)
+  if (data === null) {
+    console.log("data was null: display loading")
+    return loadingDisplay()
+  }
+  return (
+    loadedDisplay()
   );
 }
 
