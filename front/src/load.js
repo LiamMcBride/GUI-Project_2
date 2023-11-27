@@ -53,7 +53,7 @@ const empty = {
 //     ]
 //   };
   
-  console.log(dataset);
+  // console.log(dataset);
   
   
 
@@ -80,10 +80,10 @@ function load() {
     localStorage.setItem('pr1.json', JSON.stringify(dataset));
     localStorage.setItem('empty.json', JSON.stringify(empty));
     localStorage.setItem('grades.json', JSON.stringify(grades));
-    for (let i = 0; i < localStorage.length; i++) {
-        console.log(localStorage.key(i));
-        console.log(JSON.parse(localStorage.getItem(localStorage.key(i))));
-    }
+    // for (let i = 0; i < localStorage.length; i++) {
+    //     console.log(localStorage.key(i));
+    //     console.log(JSON.parse(localStorage.getItem(localStorage.key(i))));
+    // }
 }
 
 load();
