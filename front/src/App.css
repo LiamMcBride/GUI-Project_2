@@ -1,0 +1,16 @@
+/*
+Liam McBride (mailmcbride)
+*/
+
+.App {
+  /* margin: auto 0; */
+  width: 100%;
+  text-align: center;
+  /* display: flex; */
+}
+
+.app-child {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}

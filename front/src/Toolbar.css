@@ -1,0 +1,79 @@
+/*
+Liam McBride (mailmcbride)
+*/
+
+.toolbar {
+    text-align: center;
+    max-width: 824px;
+    height: 40px;
+    margin: 0 auto;
+    position: relative;
+    background-color: #107DDA;
+  }
+  
+  .toolbar h1 {
+    display: inline;
+    font-size: 24px;
+    line-height: 40px;
+    color: white;
+    font-weight: normal;
+  }
+  
+  .drop-down-toggle-button {
+    position: absolute;
+    left: 1%;
+    top: 22%;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 5px;
+    background-color: white;
+  }
+  
+  .drop-down-toggle-button p {
+    position: absolute;
+    top: -35%;
+    left: 110%;
+    color: red;
+    font-weight: bold;
+  }
+  
+  .file-window-div {
+    position: absolute;
+    top: 80%;
+    left: 1%;
+    width: 75px;
+    /* height: 100px; */
+    text-align: left;
+    background-color: white;
+    overflow: auto;
+    border: solid 1px gray;
+  }
+  
+  .file-window-div button {
+    position: static;
+    width: 100%;
+    text-align: left;
+    background-color: white;
+  }
+  
+  .load-menu-div {
+    position: absolute;
+    top: calc(100% + 15px);
+    left: calc(1% + 78px);
+    height: 21.5px;
+    border: solid 1px gray;
+    background-color: white;
+  }
+  
+  .save-as-menu-div {
+    position: absolute;
+    top: calc(100% + 60px);
+    left: calc(1% + 78px);
+    height: 21.5px;
+    border: solid 1px gray;
+    background-color: white;
+  }
+  
+  .save-as-menu-div button {
+    background-color: white;
+  }

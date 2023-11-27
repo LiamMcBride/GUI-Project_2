@@ -1,0 +1,71 @@
+/*
+Liam McBride (mailmcbride)
+*/
+
+#chart-div {
+    font-family: Arial;
+    height: 100%;
+    width: 100%;
+}
+
+#values text {
+    font-size: 1pt;
+}
+
+#labels text {
+    font-size: 1pt;
+}
+
+svg {
+    width:  100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+svg {
+    /* position: absolute;
+    top: 5%;
+    left: 0%;
+    width: 100%;
+    height: 95%; */
+    z-index: 1;
+    font-family: Arial;
+    text-anchor: middle;
+}
+
+#title {
+    font-size: 3pt;
+    fill: black;
+
+}
+
+#bars line {
+    stroke: rgb(191, 191, 191);
+    stroke-width: 0.1pt;
+}
+
+#bars rect {
+    fill: dodgerblue;
+}
+
+#bars .selected-bar {
+    fill: red;
+}
+
+#data-on-demand {
+    width: 60%;
+    height: 5px;
+}
+
+.selected-data-on-demand {
+    fill: red;
+}
+
+.not-selected-data-on-demand {
+    fill: dodgerblue;
+}
+
+.hidden {
+    display: none;
+}

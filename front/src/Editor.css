@@ -1,0 +1,48 @@
+.new-value-container {
+    display: flex;
+    width: 90%;
+    height: 25px;
+    margin: 8px auto;
+}
+
+.new-value-container input {
+    display: block;
+    background-color: white;
+    flex-grow: 2;
+}
+
+.new-value-container button {
+    display: block;
+    background-color: white;
+    flex-grow: 1;
+}
+
+.key-value-column-container{
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+    max-height: 375px;
+    margin-top: 16px;
+}
+
+.key-value-container{
+    display: flex;
+    width: 90%;
+    height: 25px;
+    margin: 2px auto;
+}
+
+.key-value-container input[type=text], .key-value-container input[type=number] {
+    flex-grow: 1;
+    margin: 0 4px;
+    margin-right: 0px;
+    /* background-color: red; */
+}
+
+.key-value-container input[type=checkbox] {
+    flex-grow: 1;
+    margin: 0;
+    margin-right: 4px;
+    max-width: 15px;
+    height: auto;
+}

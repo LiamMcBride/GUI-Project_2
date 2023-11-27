@@ -1,0 +1,18 @@
+/*
+    Liam McBride (mailmcbride)
+    HW 5
+*/
+
+// Import mongoose library
+const mongoose = require('mongoose');
+
+// Create schema
+const CS3744Schema = new mongoose.Schema({
+    caption: String,
+    datasets: {
+        type: Array
+    }
+});
+
+// Export schema
+module.exports = mongoose.model('CS3744Schema', CS3744Schema, 'Datasets');
