@@ -3,7 +3,7 @@ Liam McBride (mailmcbride)
 */
 
 import { Box } from '@mui/system';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import BarChart from './BarChart';
 import Editor from './Editor';
@@ -15,7 +15,7 @@ function App() {
   //file and data state variables
   const [fileName, setFileName] = useState('pr1.json') //base data set
   const [editedMetaData, setEditedMetaData] = useState({ title: "", key: "", value: "" }) //meta data only really gets used on title or kv name changes. Looks to file data if these are empty
-  const [data, setData] = useState(fileName === "" ? [] : JSON.parse(localStorage.getItem(fileName)).data) //checks if we have a valid filename to use
+  const [data, setData] = useState({}) //checks if we have a valid filename to use
   
   //file changing and brushing state variables
   const [modified, setModified] = useState(fileName === "") //indicates it's not saved when new dataset is created
@@ -73,7 +73,7 @@ function App() {
         height: 100
       },
       title: {
-        text: obj().title,
+        text: getNetworkObjectByFileName().dataset.title,
       },
       bar: {
         barSpacing: 10
@@ -280,14 +280,47 @@ function App() {
     }
   }
 
+  function getNetworkObjectByFileName() {
+    let tData = [...networkData]
+      console.log(tData)
+      for(let i = 0; i < 3; i++){
+        console.log(tData[i].fileName)
+        if(tData[i].fileName === fileName){
+          return tData[i]
+        }
+      }
+  }
+
+  useEffect(() => {
+    if(!loading && !error){
+      let tData = [...networkData]
+      console.log(tData)
+      setData(getNetworkObjectByFileName().dataset.data)
+    }
+  }, [loading])
+
   if(loading){
     return <h1>Loading</h1>
   }
-  if(error){
+  else if(error){
     return <h1>Error</h1>
   }
+  // else {
+  //   let tData = {...networkData}
+  //   console.log(tData)
+  //   for(let i = 0; i < 3; i++){
+  //     console.log(tData[i].fileName)
+  //     if(tData[i].fileName === fileName){
+  //       setData(tData[i])
+  //       console.log(tData[i])
+  //     }
+  //   }
+  // }
 
-  console.log(networkData)
+  // return (
+  //   <h1>loaded</h1>
+  // )
+
 
   return (
     <div className="App" style={{ paddingTop: 50 }}>

@@ -97,7 +97,7 @@ function Editor(props) {
         )
     }
 
-    useEffect(() => {}, [props])
+    useEffect(() => {}, [props, props.data])
 
     return (
         <div>
