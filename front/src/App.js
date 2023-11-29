@@ -61,7 +61,7 @@ function App() {
     }
     //if no metaData and there is data available, pull kv names from it
     else {
-      keys = Object.keys(obj().data[0])
+      keys = Object.keys(getNetworkObjectByFileName().dataset.data[0])
     }
 
     return {
