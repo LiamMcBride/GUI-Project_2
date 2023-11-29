@@ -3,39 +3,22 @@ Liam McBride (mailmcbride)
 */
 
 import { Box } from '@mui/system';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './App.css';
 import BarChart from './BarChart';
 import Editor from './Editor';
 import './load.js'
 import Toolbar from './Toolbar';
-import { getDataSet, setDataSet } from './DataHandler.js';
-import useApi from "./NetworkHook";
-import axios from 'axios';
-
 
 function App() {
   //file and data state variables
   const [fileName, setFileName] = useState('pr1.json') //base data set
-  const [metaData, setMetaData] = useState({ title: "", key: "", value: "" }) //meta data only really gets used on title or kv name changes. Looks to file data if these are empty
-  console.log("info you want is here")
-  console.log(getDataSet(fileName))
-  const [data, setData] = useState(null) //checks if we have a valid filename to use
+  const [editedMetaData, setEditedMetaData] = useState({ title: "", key: "", value: "" }) //meta data only really gets used on title or kv name changes. Looks to file data if these are empty
+  const [data, setData] = useState(fileName === "" ? [] : JSON.parse(localStorage.getItem(fileName)).data) //checks if we have a valid filename to use
+  
   //file changing and brushing state variables
   const [modified, setModified] = useState(fileName === "") //indicates it's not saved when new dataset is created
   const [selection, setSelection] = useState([]) //empty selection by default
-
-  const { networkData, error, loading } = useApi(
-    async () => {
-      try {
-          const response = await axios.get('http://localhost:3000/db/find');
-          return response.data;
-      } catch (error) {
-          throw error;
-      }
-    },
-    []
-  )
 
   //generates the configuration file for the BarChart.js component
   //Editor.js also uses it for the names of keys, values, and the title
@@ -44,7 +27,7 @@ function App() {
       var newObj = {}
       //don't load file from localStorage if there's no name
       if (fileName !== "") {
-        newObj = getDataSet(fileName)
+        newObj = JSON.parse(localStorage.getItem(fileName))
       }
       //create default title and data if there's no name
       else {
@@ -52,23 +35,22 @@ function App() {
       }
 
       //check meta data values and overwrite default or localStorage values
-      if (metaData.title !== "") {
-        newObj.title = metaData.title
+      if (editedMetaData.title !== "") {
+        newObj.title = editedMetaData.title
       }
-      if (metaData.key !== "") {
-        newObj.key = metaData.key
+      if (editedMetaData.key !== "") {
+        newObj.key = editedMetaData.key
       }
-      if (metaData.value !== "") {
-        newObj.value = metaData.value
+      if (editedMetaData.value !== "") {
+        newObj.value = editedMetaData.value
       }
       return newObj
     }
 
     var keys = []
-    console.log(`Configuration was called. Here's data: ${data}`)
     //if metaData has a key or value name don't take from file
-    if (metaData.key !== "" && metaData.value !== "") {
-      keys = [metaData.key, metaData.value]
+    if (editedMetaData.key !== "" && editedMetaData.value !== "") {
+      keys = [editedMetaData.key, editedMetaData.value]
     }
     //if no metaData and no data to pull kv from, generate defaults
     else if (obj().data.length == 0) {
@@ -99,11 +81,11 @@ function App() {
   //changes the fileName, data, resets modified indicator, and clears metaData
   const updateFileName = (name) => {
     setFileName(name)
-    setData(getDataSet(name).data)
+    setData(JSON.parse(localStorage.getItem(name)).data)
     setModified(false)
-    setMetaData({ title: "", key: "", value: "" })
+    setEditedMetaData({ title: "", key: "", value: "" })
   }
-
+  
   //event handlers
   //passed to editor to handle data additions
   //is also used as a helper function by handleDataChange
@@ -148,17 +130,14 @@ function App() {
     setData(newData)
   }
 
-  //[_ _ 2 _ 4 5 _]
-  //[_ _ 2 _ 5 _]
-
-  function shiftSelection(index) {
+  function shiftSelection(index){
     var newSelection = []
-    selection.forEach((d, i) => {
-      if (index != d) {
-        if (index < d) {
+    selection.forEach((d,i) => {
+      if (index != d){
+        if (index < d){
           newSelection.push(d - 1)
         }
-        else {
+        else{
           newSelection.push(d)
         }
       }
@@ -188,7 +167,7 @@ function App() {
     //set new data
     setData(newData)
   }
-
+  
   //saves an existing data set
   const saveDataSet = () => {
     //recreates object from load.js with new data
@@ -197,7 +176,7 @@ function App() {
       data: data
     }
 
-    setDataSet(fileName, dataset)
+    localStorage.setItem(fileName, JSON.stringify(dataset));
     //has been saved so is no longer modified
     setModified(false)
   }
@@ -208,7 +187,7 @@ function App() {
     setFileName("")
     setData([]) //blank data
     setModified(true) //isn't saved so modified should be true
-    setMetaData({ title: "", key: "", value: "" }) //blank metaData
+    setEditedMetaData({ title: "", key: "", value: "" }) //blank metaData
   }
 
   //save dataset with a new fileName
@@ -221,7 +200,7 @@ function App() {
         data: data
       }
 
-      setDataSet(fName, dataset)
+      localStorage.setItem(fName, JSON.stringify(dataset));
       setModified(false)
       setFileName(fName)
     }
@@ -233,7 +212,7 @@ function App() {
     var index = Number(e.target.id.split('_')[1])
     //is the element already selected? Are we adding or removing?
     var add = e.target.className.baseVal !== "selected-bar"
-
+    
     //generate a new array to properly set state
     var newSelection = selection
     if (add) {
@@ -267,21 +246,21 @@ function App() {
     //determines what input triggered it and modifies newObj accordingly
     if (id === "title-input") {
       newObj["title"] = e.target.value
-      newObj["key"] = metaData.key
-      newObj["value"] = metaData.value
+      newObj["key"] = editedMetaData.key
+      newObj["value"] = editedMetaData.value
     }
     else if (id === "key-name-input") {
-      newObj["title"] = metaData.title
+      newObj["title"] = editedMetaData.title
       newObj["key"] = e.target.value
-      newObj["value"] = metaData.value
+      newObj["value"] = editedMetaData.value
     }
     else if (id === "value-name-input") {
-      newObj["title"] = metaData.title
-      newObj["key"] = metaData.key
+      newObj["title"] = editedMetaData.title
+      newObj["key"] = editedMetaData.key
       newObj["value"] = e.target.value
     }
 
-    setMetaData(newObj)
+    setEditedMetaData(newObj)
     setModified(true) //has now had metaData modified
   }
 
@@ -298,84 +277,56 @@ function App() {
     }
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const tData = await getDataSet(fileName);
-        // Set the state with the data from the API
-        setData(tData);
-        console.log("data is set")
-        console.log(tData)
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    }
-
-    fetchData()
-  }, [])
-
-  const loadedDisplay = () => {
-    return (
-      <div className="App" style={{ paddingTop: 50 }}>
-        <Toolbar
-          modified={modified}
-          fileName={fileName}
-          handleNew={newDataSet}
-          handleSave={saveDataSet}
-          handleLoad={updateFileName}
-          handleSaveAs={saveDataSetAs}
-        />
-        <div className="app-child">
-          <Box sx={{
-            maxWidth: "400px",
-            height: "400px",
-            border: "black solid 2px",
-            borderRadius: "5px",
-            flexGrow: "1",
-            margin: "8px"
-          }}>
-            <Editor
-              handleMetaDataChange={handleMetaDataChange}
-              updateSelection={updateSelectionEditor}
-              selection={selection}
-              removeData={removeDataAtIndex}
-              addData={updateData}
-              dataChange={handleDataChange}
-              data={data}
-              conf={configuration()}
-            />
-          </Box>
-          <Box sx={{
-            maxWidth: "400px",
-            height: "400px",
-            border: "black solid 2px",
-            borderRadius: "5px",
-            display: "inline-block",
-            flexGrow: "1",
-            margin: "8px"
-          }}>
-            <BarChart
-              updateSelection={updateSelectionBar}
-              selection={selection}
-              conf={configuration()}
-              data={data}
-            />
-          </Box>
-        </div>
-
-
-      </div>
-    )
-  }
-
-  const loadingDisplay = () => <div>Loading</div>
-  console.log(data)
-  if (data === null) {
-    console.log("data was null: display loading")
-    return loadingDisplay()
-  }
   return (
-    loadedDisplay()
+    <div className="App" style={{ paddingTop: 50 }}>
+      <Toolbar 
+        modified={modified} 
+        fileName={fileName} 
+        handleNew={newDataSet} 
+        handleSave={saveDataSet} 
+        handleLoad={updateFileName} 
+        handleSaveAs={saveDataSetAs}
+      />
+      <div className="app-child">
+        <Box sx={{
+          maxWidth: "400px",
+          height: "400px",
+          border: "black solid 2px",
+          borderRadius: "5px",
+          flexGrow: "1",
+          margin: "8px"
+        }}>
+          <Editor 
+            handleMetaDataChange={handleMetaDataChange} 
+            updateSelection={updateSelectionEditor} 
+            selection={selection} 
+            removeData={removeDataAtIndex} 
+            addData={updateData} 
+            dataChange={handleDataChange} 
+            data={data} 
+            conf={configuration()} 
+          />
+        </Box>
+        <Box sx={{
+          maxWidth: "400px",
+          height: "400px",
+          border: "black solid 2px",
+          borderRadius: "5px",
+          display: "inline-block",
+          flexGrow: "1",
+          margin: "8px"
+        }}>
+          <BarChart 
+            updateSelection={updateSelectionBar} 
+            selection={selection} 
+            conf={configuration()} 
+            data={data} 
+          />
+        </Box>
+      </div>
+
+
+    </div>
   );
 }
 
