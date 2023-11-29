@@ -4,7 +4,7 @@ Liam McBride (mailmcbride)
 
 import useApi from "./NetworkHook";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function App2() {
 
@@ -19,7 +19,11 @@ function App2() {
         }
     };
     
-    const { data, error, loading } = useApi(fetchDataFromApi, [], "pr1.json")
+    const { data, error, loading } = useApi(fetchDataFromApi, [])
+    
+    
+    useEffect(() => {},[fileName])
+
 
     if(loading) {
         return <div>I'm loading</div>
@@ -27,12 +31,19 @@ function App2() {
     else if(error) {
         return <div>Error</div>
     }
-    else if(data !== undefined) {
-        console.log(data)
+
+    function render(name) {
+        for(let i = 0; i < data.length; i++){
+            console.log(name)
+            if(data[i].fileName === name){
+                return data[i].data.title
+            }
+        }
     }
 
+
     return (
-        <div>{data.fileName}</div>
+        <div>{render(fileName)}</div>
     );
 }
 

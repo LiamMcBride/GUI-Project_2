@@ -10,6 +10,9 @@ import Editor from './Editor';
 import './load.js'
 import Toolbar from './Toolbar';
 import { getDataSet, setDataSet } from './DataHandler.js';
+import useApi from "./NetworkHook";
+import axios from 'axios';
+
 
 function App() {
   //file and data state variables
@@ -21,6 +24,18 @@ function App() {
   //file changing and brushing state variables
   const [modified, setModified] = useState(fileName === "") //indicates it's not saved when new dataset is created
   const [selection, setSelection] = useState([]) //empty selection by default
+
+  const { networkData, error, loading } = useApi(
+    async () => {
+      try {
+          const response = await axios.get('http://localhost:3000/db/find');
+          return response.data;
+      } catch (error) {
+          throw error;
+      }
+    },
+    []
+  )
 
   //generates the configuration file for the BarChart.js component
   //Editor.js also uses it for the names of keys, values, and the title

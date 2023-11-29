@@ -2,8 +2,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const useApi = (apiFunction, dependencies = [], fileName) => {
-  const [data, setData] = useState(null);
+const useApi = (apiFunction, dependencies = []) => {
+  const [networkData, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -12,15 +12,7 @@ const useApi = (apiFunction, dependencies = [], fileName) => {
       try {
         setLoading(true);
         const response = await apiFunction();
-        console.log(response[0])
-
-        for(let i = 0; i < response.length; i++){
-            console.log(fileName)
-            console.log(response[i].fileName)
-            if(response[i]["fileName"] === fileName){
-                setData(response[i])
-            }
-        }
+        setData(response)
 
         // setData(response[0]);
       } catch (err) {
@@ -34,7 +26,7 @@ const useApi = (apiFunction, dependencies = [], fileName) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies);
 
-  return { data, error, loading };
+  return { data: networkData, error, loading };
 };
 
 export default useApi;
