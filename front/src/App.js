@@ -8,6 +8,7 @@ import './App.css';
 import BarChart from './BarChart';
 import Editor from './Editor';
 import './load.js'
+import useApi from './NetworkHook';
 import Toolbar from './Toolbar';
 
 function App() {
@@ -19,6 +20,8 @@ function App() {
   //file changing and brushing state variables
   const [modified, setModified] = useState(fileName === "") //indicates it's not saved when new dataset is created
   const [selection, setSelection] = useState([]) //empty selection by default
+
+  const {networkData, error, loading} = useApi([]);
 
   //generates the configuration file for the BarChart.js component
   //Editor.js also uses it for the names of keys, values, and the title
@@ -276,6 +279,15 @@ function App() {
       updateData(e.target.value, -1, Number(index[1]))
     }
   }
+
+  if(loading){
+    return <h1>Loading</h1>
+  }
+  if(error){
+    return <h1>Error</h1>
+  }
+
+  console.log(networkData)
 
   return (
     <div className="App" style={{ paddingTop: 50 }}>

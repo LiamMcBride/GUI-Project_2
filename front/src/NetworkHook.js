@@ -2,9 +2,27 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
+function getDataSet(name) {
+  axios.get('http://localhost:3000/db/find').then(res => {
+      let sets = res["data"]
+      return sets
+      // for(let x = 0; x < sets.length; x++){
+      //     if (sets[x].fileName === name){
+      //         console.log(sets[x]['dataset'].data)
+      //         return sets[x]['dataset']
+      //     }
+      // }
+      // saveNewTitles(res["data"][0]["datasets"])
+      // setId(res["data"][0]["_id"])
+  }).catch((err) => { //catches error if there is one and sets titles to empty
+      console.log(err)
+      throw err
+  })
+  // return JSON.parse(localStorage.getItem(name))
+}
 
-const useApi = (apiFunction, dependencies = []) => {
-  const [networkData, setNetworkData] = useState(null);
+const useApi = (dependencies) => {
+  const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   
@@ -12,8 +30,9 @@ const useApi = (apiFunction, dependencies = []) => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await apiFunction();
-        setNetworkData(response)
+        const response = await getDataSet();
+        console.log(response)
+        setData(response)
         
         // setData(response[0]);
       } catch (err) {
@@ -27,7 +46,7 @@ const useApi = (apiFunction, dependencies = []) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies);
   
-  return { data: networkData, error, loading };
+  return { networkData: data, error, loading };
 };
 
 export default useApi;
