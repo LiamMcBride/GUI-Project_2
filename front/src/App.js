@@ -8,14 +8,14 @@ import './App.css';
 import BarChart from './BarChart';
 import Editor from './Editor';
 import './load.js'
-import useApi from './NetworkHook';
+import {useApi, updateAPIData} from './NetworkHook';
 import Toolbar from './Toolbar';
 
 function App() {
   //file and data state variables
   const [fileName, setFileName] = useState('pr1.json') //base data set
   const [editedMetaData, setEditedMetaData] = useState({ title: "", key: "", value: "" }) //meta data only really gets used on title or kv name changes. Looks to file data if these are empty
-  const [data, setData] = useState({}) //checks if we have a valid filename to use
+  const [data, setData] = useState([]) //checks if we have a valid filename to use
   
   //file changing and brushing state variables
   const [modified, setModified] = useState(fileName === "") //indicates it's not saved when new dataset is created
@@ -30,7 +30,8 @@ function App() {
       var newObj = {}
       //don't load file from localStorage if there's no name
       if (fileName !== "") {
-        newObj = JSON.parse(localStorage.getItem(fileName))
+        newObj["data"] = data
+        // newObj = JSON.parse(localStorage.getItem(fileName))
       }
       //create default title and data if there's no name
       else {
@@ -179,7 +180,11 @@ function App() {
       data: data
     }
 
-    localStorage.setItem(fileName, JSON.stringify(dataset));
+    console.log("networkData")
+    console.log(getNetworkObjectByFileName())
+
+    // localStorage.setItem(fileName, JSON.stringify(dataset));
+    updateAPIData(getNetworkObjectByFileName()["_id"], fileName, dataset)
     //has been saved so is no longer modified
     setModified(false)
   }
@@ -282,9 +287,8 @@ function App() {
 
   function getNetworkObjectByFileName() {
     let tData = [...networkData]
-      console.log(tData)
       for(let i = 0; i < 3; i++){
-        console.log(tData[i].fileName)
+        console.log("getnetob")
         if(tData[i].fileName === fileName){
           return tData[i]
         }
@@ -292,19 +296,28 @@ function App() {
   }
 
   useEffect(() => {
-    if(!loading && !error){
+    console.log("useEffect")
+    console.log(`loading: ${loading} error: ${error}`)
+    if(!loading && error == null){
+      console.log(`net data`)
+      console.log(`net data ${networkData}`)
       let tData = [...networkData]
       console.log(tData)
-      setData(getNetworkObjectByFileName().dataset.data)
+      tData = getNetworkObjectByFileName().dataset.data
+      setData(tData)
+      console.log(tData)
     }
-  }, [loading])
+  }, [loading, error, networkData])
 
-  if(loading){
+  if(loading || data.length == 0){
     return <h1>Loading</h1>
   }
   else if(error){
     return <h1>Error</h1>
   }
+
+  console.log("loading and error are false")
+  console.log(data)
   // else {
   //   let tData = {...networkData}
   //   console.log(tData)

@@ -54,16 +54,20 @@ router.route('/find/:caption').get(function(req, res) {
 });
 
 router.route('/update/:id').post( (req, res) => {
-  console.log("Post Request made:")
+  console.log("hello")
+  console.log(req.body)
+  console.log(req.params.id)
+  // console.log("Post Request made:")
   tableSchema.findById(req.params.id).then(function(items, err) {
     if (err) {
       console.log(err);
     }
     else {
-      items.caption = "";
-      items.datasets = req.body;
+      items.fileName = req.body.fileName
+      items.dataset = req.body.dataset
       items.save().then(items => {
         res.json('Items updated!');
+        console.log(items.dataset)
       })
           .catch(err => {
             res.status(400).send("Update not possible");

@@ -2,12 +2,13 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const useApi = (dependencies) => {
+export const useApi = (dependencies) => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
+    console.log("net request made")
       const callAPI = async () => {
         setLoading(true);
         try {
@@ -15,6 +16,7 @@ const useApi = (dependencies) => {
             'http://localhost:3000/db/find'
           );
           setData(result.data);
+          console.log(result.data)
         } catch (err) {
           setError(err.message || "Unexpected Error!");
         } finally {
@@ -28,7 +30,20 @@ const useApi = (dependencies) => {
   return { networkData: data, error, loading };
 };
 
-export default useApi;
+export const updateAPIData = (id, fileName, dataset) => {
+  let newData = {
+    "fileName": fileName,
+    "dataset": dataset
+  }
+
+  console.log(id)
+
+
+  axios.post('http://localhost:3000/db/update/' + id, newData).then(res => {
+      console.log(res)
+    })
+};
+
 
 //example of what the old data looks like
 /*
