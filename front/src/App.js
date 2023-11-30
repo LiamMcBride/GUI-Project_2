@@ -58,7 +58,7 @@ function App() {
       keys = [editedMetaData.key, editedMetaData.value]
     }
     //if no metaData and no data to pull kv from, generate defaults
-    else if (obj().data.length == 0) {
+    else if (obj().data.length == 0 || getNetworkObjectByFileName().dataset.data.length == 0) {
       keys = ["key", "value"]
     }
     //if no metaData and there is data available, pull kv names from it
