@@ -40,8 +40,6 @@ function App() {
       }
 
       //check meta data values and overwrite default or localStorage values
-      console.log("meta")
-      console.log(editedMetaData)
       if (editedMetaData.title !== "") {
         newObj.title = editedMetaData.title
       }
@@ -51,7 +49,6 @@ function App() {
       if (editedMetaData.value !== "") {
         newObj.value = editedMetaData.value
       }
-      console.log(newObj)
       return newObj
     }
 
@@ -69,10 +66,6 @@ function App() {
       keys = Object.keys(getNetworkObjectByFileName().dataset.data[0])
     }
 
-    let newTitle = obj().title == '' ? getNetworkObjectByFileName().dataset.title : obj().title
-    console.log(`newTitle: ${newTitle}`)
-    console.log(obj().title)
-
     return {
       dataPadding: 5,
       keyName: keys[0],
@@ -82,7 +75,7 @@ function App() {
         height: 100
       },
       title: {
-        text: newTitle,
+        text: obj().title == '' ? getNetworkObjectByFileName().dataset.title : obj().title,
       },
       bar: {
         barSpacing: 10
@@ -93,7 +86,8 @@ function App() {
   //changes the fileName, data, resets modified indicator, and clears metaData
   const updateFileName = (name) => {
     setFileName(name)
-    setData(JSON.parse(localStorage.getItem(name)).data)
+    console.log(getNetworkObjectByFileName(name).dataset.data)
+    setData(getNetworkObjectByFileName(name).dataset.data)
     setModified(false)
     setEditedMetaData({ title: "", key: "", value: "" })
   }
@@ -293,11 +287,11 @@ function App() {
     }
   }
 
-  function getNetworkObjectByFileName() {
+  function getNetworkObjectByFileName(name=fileName) {
     let tData = [...networkData]
       for(let i = 0; i < 3; i++){
         console.log("getnetob")
-        if(tData[i].fileName === fileName){
+        if(tData[i].fileName === name){
           return tData[i]
         }
       }
@@ -317,7 +311,7 @@ function App() {
     }
   }, [loading, error, networkData])
 
-  if(loading || data.length == 0){
+  if(loading){
     return <h1>Loading</h1>
   }
   else if(error){
@@ -352,6 +346,7 @@ function App() {
         handleSave={saveDataSet} 
         handleLoad={updateFileName} 
         handleSaveAs={saveDataSetAs}
+        networkData={networkData}
       />
       <div className="app-child">
         <Box sx={{

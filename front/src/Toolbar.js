@@ -49,8 +49,8 @@ function Toolbar(props) {
         if (show) {
             var elems = []
 
-            for (var i = 0; i < getNumberOfDataSets(); i++) { //populates the elems var with the existing file names
-                elems.push(getDataSetNameFromIndex(i))
+            for (var i = 0; i < props.networkData.length; i++) { //populates the elems var with the existing file names
+                elems.push(props.networkData[i].fileName)
             }
             //if you created a new file with no name yet, this will indicate that to the user
             //as well as give select a default value so you are able to switch to all valid filenames
