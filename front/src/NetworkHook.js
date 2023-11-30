@@ -27,7 +27,7 @@ export const useApi = (dependencies) => {
     
   }, dependencies);
   
-  return { networkData: data, error, loading };
+  return { networkData: data, error, loading, setLoading };
 };
 
 export const updateAPIData = (id, fileName, dataset) => {
@@ -40,6 +40,17 @@ export const updateAPIData = (id, fileName, dataset) => {
 
 
   axios.post('http://localhost:3000/db/update/' + id, newData).then(res => {
+      console.log(res)
+    })
+};
+
+export const createAPIData = (fileName, dataset) => {
+  let newData = {
+    "fileName": fileName,
+    "dataset": dataset
+  }
+
+  axios.post('http://localhost:3000/db/create', newData).then(res => {
       console.log(res)
     })
 };

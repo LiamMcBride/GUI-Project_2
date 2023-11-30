@@ -54,10 +54,7 @@ router.route('/find/:caption').get(function(req, res) {
 });
 
 router.route('/update/:id').post( (req, res) => {
-  console.log("hello")
-  console.log(req.body)
-  console.log(req.params.id)
-  // console.log("Post Request made:")
+
   tableSchema.findById(req.params.id).then(function(items, err) {
     if (err) {
       console.log(err);
@@ -74,6 +71,18 @@ router.route('/update/:id').post( (req, res) => {
           });
     }
   });
+});
+
+router.route('/create').post( (req, res) => {
+  const newObj = new tableSchema({
+    fileName: req.body.fileName,
+    dataset: req.body.dataset
+  })
+  newObj.save().then(() => {
+    res.json("New File Created")
+  }).catch((err) => {
+    res.status(400).send(err)
+  })
 });
 
 // Export the app to be used in bin/www.js

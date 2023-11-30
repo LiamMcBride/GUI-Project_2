@@ -8,7 +8,7 @@ import './App.css';
 import BarChart from './BarChart';
 import Editor from './Editor';
 import './load.js'
-import {useApi, updateAPIData} from './NetworkHook';
+import {useApi, updateAPIData, createAPIData} from './NetworkHook';
 import Toolbar from './Toolbar';
 
 function App() {
@@ -21,7 +21,7 @@ function App() {
   const [modified, setModified] = useState(fileName === "") //indicates it's not saved when new dataset is created
   const [selection, setSelection] = useState([]) //empty selection by default
 
-  const {networkData, error, loading} = useApi([]);
+  const {networkData, error, loading, setLoading} = useApi([fileName]);
 
   //generates the configuration file for the BarChart.js component
   //Editor.js also uses it for the names of keys, values, and the title
@@ -182,9 +182,6 @@ function App() {
       data: data
     }
 
-    console.log("networkData")
-    console.log(getNetworkObjectByFileName())
-
     // localStorage.setItem(fileName, JSON.stringify(dataset));
     updateAPIData(getNetworkObjectByFileName()["_id"], fileName, dataset)
     //has been saved so is no longer modified
@@ -210,7 +207,8 @@ function App() {
         data: data
       }
 
-      localStorage.setItem(fName, JSON.stringify(dataset));
+      createAPIData(fName, dataset)
+      setLoading(true)
       setModified(false)
       setFileName(fName)
     }
@@ -289,7 +287,7 @@ function App() {
 
   function getNetworkObjectByFileName(name=fileName) {
     let tData = [...networkData]
-      for(let i = 0; i < 3; i++){
+      for(let i = 0; i < networkData.length; i++){
         if(tData[i].fileName === name){
           return tData[i]
         }
@@ -303,7 +301,7 @@ function App() {
       tData = getNetworkObjectByFileName().dataset.data
       setData(tData)
     }
-  }, [loading, error, networkData])
+  }, [loading, error, networkData, fileName])
 
   if(loading){
     return <h1>Loading</h1>
