@@ -290,7 +290,6 @@ function App() {
   function getNetworkObjectByFileName(name=fileName) {
     let tData = [...networkData]
       for(let i = 0; i < 3; i++){
-        console.log("getnetob")
         if(tData[i].fileName === name){
           return tData[i]
         }
@@ -299,15 +298,10 @@ function App() {
 
   useEffect(() => {
     console.log("useEffect")
-    console.log(`loading: ${loading} error: ${error}`)
     if(!loading && error == null){
-      console.log(`net data`)
-      console.log(`net data ${networkData}`)
       let tData = [...networkData]
-      console.log(tData)
       tData = getNetworkObjectByFileName().dataset.data
       setData(tData)
-      console.log(tData)
     }
   }, [loading, error, networkData])
 
@@ -317,25 +311,6 @@ function App() {
   else if(error){
     return <h1>Error</h1>
   }
-
-  console.log("loading and error are false")
-  console.log(data)
-  // else {
-  //   let tData = {...networkData}
-  //   console.log(tData)
-  //   for(let i = 0; i < 3; i++){
-  //     console.log(tData[i].fileName)
-  //     if(tData[i].fileName === fileName){
-  //       setData(tData[i])
-  //       console.log(tData[i])
-  //     }
-  //   }
-  // }
-
-  // return (
-  //   <h1>loaded</h1>
-  // )
-
 
   return (
     <div className="App" style={{ paddingTop: 50 }}>
