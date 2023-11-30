@@ -20,13 +20,20 @@ Liam McBride (mailmcbride)
   }
   
   .drop-down-toggle-button {
-    position: absolute;
-    left: 1%;
-    top: 22%;
+    display: inline-block;
     border: none;
     padding: 4px 12px;
     border-radius: 5px;
     background-color: white;
+    margin-right: 4px;
+  }
+
+  .drop-down-buttons {
+    position: absolute;
+    left: 1%;
+    top: 12%;
+    border: none;
+    padding: 4px 0px;
   }
   
   .drop-down-toggle-button p {

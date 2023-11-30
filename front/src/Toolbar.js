@@ -116,15 +116,19 @@ function Toolbar(props) {
 
     return (
         <div className="toolbar">
-            <button className="drop-down-toggle-button" 
-                onClick={() => dropDownToggle ? closeDropDown() : setDropDownToggle(true)} //close all or open just main menu
-            >
-                File
-                {
-                    //modified indicator only renders if modified is true
-                }
-                <p className={props.modified ? "" : "hidden"}>Modified</p>
-            </button>
+            <div className='drop-down-buttons'>
+                <button className="drop-down-toggle-button" 
+                    onClick={() => dropDownToggle ? closeDropDown() : setDropDownToggle(true)} //close all or open just main menu
+                >
+                    File
+                    {
+                        //modified indicator only renders if modified is true
+                    }
+                    <p className={props.modified ? "" : "hidden"}>Modified</p>
+                </button>
+                {/* <div style={{display: "inline-block", width: "10px"}}></div> */}
+                <button className='drop-down-toggle-button'>Edit</button>
+            </div>
             {
                 //main menu, load sub-menu, and save as sub-menu are conditionally rendered here off of state vars
             }
