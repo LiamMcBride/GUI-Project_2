@@ -62,6 +62,25 @@ Liam McBride (mailmcbride)
     text-align: left;
     background-color: white;
   }
+
+  .edit-window-div {
+    position: absolute;
+    top: 80%;
+    left: calc(1% + 47px);
+    width: 75px;
+    /* height: 100px; */
+    text-align: left;
+    background-color: white;
+    overflow: auto;
+    border: solid 1px gray;
+  }
+  
+  .edit-window-div button {
+    position: static;
+    width: 100%;
+    text-align: left;
+    background-color: white;
+  }
   
   .load-menu-div {
     position: absolute;

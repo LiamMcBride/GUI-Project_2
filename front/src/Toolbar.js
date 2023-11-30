@@ -9,6 +9,7 @@ import {getNumberOfDataSets, getDataSetNameFromIndex} from './DataHandler.js'
 function Toolbar(props) {
     //drop down toggle variables
     const [dropDownToggle, setDropDownToggle] = useState(false)
+    const [editDropDownToggle, setEditDropDownToggle] = useState(false)
     const [loadToggle, setLoadToggle] = useState(false)
     const [saveAsToggle, setSaveAsToggle] = useState(false)
 
@@ -114,6 +115,26 @@ function Toolbar(props) {
         }
     }
 
+    const editHandler = (e) => {
+        setEditDropDownToggle(false)
+        props.handleEdit(e)
+    }
+    
+    const editDropDown = (show) => {
+        if (show) {
+            return (
+                <div className="edit-window-div">
+                    <button id="cut" onClick={editHandler}>Cut</button>
+                    <button id="copy" onClick={editHandler}>Copy</button>
+                    <button id="paste" onClick={editHandler}>Paste</button>
+                </div>
+            )
+        }
+        else {
+            return null
+        }
+    }
+
     return (
         <div className="toolbar">
             <div className='drop-down-buttons'>
@@ -127,7 +148,12 @@ function Toolbar(props) {
                     <p className={props.modified ? "" : "hidden"}>Modified</p>
                 </button>
                 {/* <div style={{display: "inline-block", width: "10px"}}></div> */}
-                <button className='drop-down-toggle-button'>Edit</button>
+                <button 
+                    className='drop-down-toggle-button'
+                    onClick={() => editDropDownToggle ? setEditDropDownToggle(false) : setEditDropDownToggle(true)}
+                >
+                    Edit
+                </button>
             </div>
             {
                 //main menu, load sub-menu, and save as sub-menu are conditionally rendered here off of state vars
@@ -135,6 +161,7 @@ function Toolbar(props) {
             {dropDown(dropDownToggle)}
             {loadMenu(loadToggle)}
             {saveAsMenu(saveAsToggle)}
+            {editDropDown(editDropDownToggle)}
             <h1>Project 1</h1>
         </div>
     );

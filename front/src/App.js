@@ -20,6 +20,7 @@ function App() {
   //file changing and brushing state variables
   const [modified, setModified] = useState(fileName === "") //indicates it's not saved when new dataset is created
   const [selection, setSelection] = useState([]) //empty selection by default
+  const [clipBoard, setClipBoard] = useState([]) //empty selection by default
 
   const {networkData, error, loading, setLoading} = useApi([fileName]);
 
@@ -153,6 +154,7 @@ function App() {
 
   //removes data based on index, used by Editor's delete buttons
   function removeDataAtIndex(index) {
+    console.log("Removing: " + index)
     shiftSelection(index)
 
     //data has been modified
@@ -172,6 +174,41 @@ function App() {
 
     //set new data
     setData(newData)
+  }
+
+  function removeSelectionData() {
+
+    //data has been modified
+    setModified(true)
+    var newData = []
+
+    for (var i = 0; i < data.length; i++) {
+      //only add values that don't match the index param
+      if (!selection.includes(i)) {
+        var newObject = {}
+
+        newObject[configuration().keyName] = data[i][configuration().keyName]
+        newObject[configuration().valueName] = data[i][configuration().valueName]
+        newData.push(newObject)
+      }
+    }
+    setSelection([])
+    //set new data
+    setData(newData)
+  }
+
+  function saveToClipBoard() {
+    let newBoard = []
+    selection.forEach((s) => {
+      newBoard.push(data[s])
+    })
+    console.log(newBoard)
+    setClipBoard(newBoard)
+
+  }
+
+  function pasteClipBoard() {
+    
   }
   
   //saves an existing data set
@@ -285,6 +322,26 @@ function App() {
     }
   }
 
+  const handleEdit = (e) => {
+    const id = e.target.id
+
+    if(id === "cut"){
+      console.log("cut")
+      saveToClipBoard()
+      if(selection.length != 0){
+        removeSelectionData()
+      }
+    }
+    else if(id === "copy"){
+      console.log("copy")
+      saveToClipBoard()
+    }
+    else if(id === "paste"){
+      console.log("paste")
+      pasteClipBoard()
+    }
+  }
+
   function getNetworkObjectByFileName(name=fileName) {
     if (name === ""){
       return {fileName: "no file name", dataset: {title: "New Data Set", data: []}}
@@ -323,6 +380,7 @@ function App() {
         handleSave={saveDataSet} 
         handleLoad={updateFileName} 
         handleSaveAs={saveDataSetAs}
+        handleEdit={handleEdit}
         networkData={networkData}
       />
       <div className="app-child">
