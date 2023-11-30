@@ -31,6 +31,7 @@ function App() {
       //don't load file from localStorage if there's no name
       if (fileName !== "") {
         newObj["data"] = data
+        newObj["title"] = getNetworkObjectByFileName().dataset["title"]
         // newObj = JSON.parse(localStorage.getItem(fileName))
       }
       //create default title and data if there's no name
@@ -39,6 +40,8 @@ function App() {
       }
 
       //check meta data values and overwrite default or localStorage values
+      console.log("meta")
+      console.log(editedMetaData)
       if (editedMetaData.title !== "") {
         newObj.title = editedMetaData.title
       }
@@ -48,6 +51,7 @@ function App() {
       if (editedMetaData.value !== "") {
         newObj.value = editedMetaData.value
       }
+      console.log(newObj)
       return newObj
     }
 
@@ -65,6 +69,10 @@ function App() {
       keys = Object.keys(getNetworkObjectByFileName().dataset.data[0])
     }
 
+    let newTitle = obj().title == '' ? getNetworkObjectByFileName().dataset.title : obj().title
+    console.log(`newTitle: ${newTitle}`)
+    console.log(obj().title)
+
     return {
       dataPadding: 5,
       keyName: keys[0],
@@ -74,7 +82,7 @@ function App() {
         height: 100
       },
       title: {
-        text: getNetworkObjectByFileName().dataset.title,
+        text: newTitle,
       },
       bar: {
         barSpacing: 10
