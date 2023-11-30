@@ -286,12 +286,16 @@ function App() {
   }
 
   function getNetworkObjectByFileName(name=fileName) {
+    if (name === ""){
+      return {fileName: "no file name", dataset: {title: "New Data Set", data: []}}
+    }
     let tData = [...networkData]
-      for(let i = 0; i < networkData.length; i++){
-        if(tData[i].fileName === name){
-          return tData[i]
-        }
+    for(let i = 0; i < networkData.length; i++){
+      if(tData[i].fileName === name){
+        return tData[i]
       }
+    }
+    setLoading(true)
   }
 
   useEffect(() => {
