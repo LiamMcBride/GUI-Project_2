@@ -200,6 +200,7 @@ function App() {
   function saveToClipBoard() {
     let newBoard = []
     selection.forEach((s) => {
+      console.log(data[s])
       newBoard.push(data[s])
     })
     console.log(newBoard)
@@ -207,8 +208,40 @@ function App() {
 
   }
 
+  function updateMultipleData(arr){
+     var newData = []
+
+    //create a brand new object each iteration to make sure state updates
+    for (var i = 0; i < data.length; i++) {
+      var newObject = {}
+
+      newObject[configuration().keyName] = data[i][configuration().keyName]
+      newObject[configuration().valueName] = data[i][configuration().valueName]
+      newData.push(newObject)
+    }
+
+    for (var i = 0; i < arr.length; i++) {
+      newData.push(arr[i])
+    }
+
+    //set state
+    setData(newData)
+  }
+
   function pasteClipBoard() {
-    
+    if(clipBoard.length !== 0){
+      let key = configuration().keyName
+      let value = configuration().valueName
+      let [oldKey, oldValue] = Object.keys(clipBoard[0])
+      let updateArray = []
+      clipBoard.forEach((c) => {
+        let nPoint = {}
+        nPoint[key] = c[oldKey]
+        nPoint[value] = c[oldValue]
+        updateArray.push(nPoint)
+      })
+      updateMultipleData(updateArray)
+    }
   }
   
   //saves an existing data set
@@ -323,7 +356,10 @@ function App() {
   }
 
   const handleEdit = (e) => {
-    const id = e.target.id
+    performEdit(e.target.id)
+  }
+
+  const performEdit = (id) => {
 
     if(id === "cut"){
       console.log("cut")
@@ -355,6 +391,24 @@ function App() {
     setLoading(true)
   }
 
+  function handleKeyDown(e) {
+    if((e.ctrlKey || e.metaKey) && e.key === 'c'){
+      saveToClipBoard()
+      e.preventDefault()
+      
+    }
+    else if((e.ctrlKey || e.metaKey) && e.key === 'p'){
+      performEdit('paste')
+      e.preventDefault()
+      console.log("paste")
+    }
+    if((e.ctrlKey || e.metaKey) && e.key === 'x'){
+      performEdit('cut')
+      e.preventDefault()
+      console.log("cut")
+    }
+  }
+
   useEffect(() => {
     console.log("useEffect")
     if(!loading && error == null){
@@ -363,6 +417,14 @@ function App() {
       setData(tData)
     }
   }, [loading, error, networkData, fileName])
+
+  // useEffect(() => {
+  //   window.addEventListener('keydown', handleKeyDown);
+
+  //   return () => {
+  //     window.removeEventListener('keydown', handleKeyDown);
+  //   };
+  // }, []);
 
   if(loading){
     return <h1>Loading</h1>
