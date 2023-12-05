@@ -18,6 +18,12 @@ Liam McBride (mailmcbride)
     color: white;
     font-weight: normal;
   }
+
+  .display-type-container {
+    position: absolute;
+    right: 4px;
+    top: 25%;
+  }
   
   .drop-down-toggle-button {
     display: inline-block;

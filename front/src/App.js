@@ -6,6 +6,7 @@ import { Box } from '@mui/system';
 import { useEffect, useState } from 'react';
 import './App.css';
 import BarChart from './BarChart';
+import DotPlot from './DotPlot';
 import Editor from './Editor';
 import './load.js'
 import {useApi, updateAPIData, createAPIData} from './NetworkHook';
@@ -21,6 +22,7 @@ function App() {
   const [modified, setModified] = useState(fileName === "") //indicates it's not saved when new dataset is created
   const [selection, setSelection] = useState([]) //empty selection by default
   const [clipBoard, setClipBoard] = useState([]) //empty selection by default
+  const [displayType, setDisplayType] = useState('bar') //empty selection by default
 
   const {networkData, error, loading, setLoading} = useApi([fileName]);
 
@@ -243,6 +245,10 @@ function App() {
       updateMultipleData(updateArray)
     }
   }
+
+  function handleDisplayChange(e) {
+    setDisplayType(e.target.value)
+  } 
   
   //saves an existing data set
   const saveDataSet = () => {
@@ -433,6 +439,27 @@ function App() {
     return <h1>Error</h1>
   }
 
+  const displayChart = () => {
+    if(displayType === 'bar'){
+      return (
+        <BarChart 
+          updateSelection={updateSelectionBar} 
+          selection={selection} 
+          conf={configuration()} 
+          data={data} 
+        />
+        )
+      }
+      return (
+        <DotPlot 
+          updateSelection={updateSelectionBar} 
+          selection={selection} 
+          conf={configuration()} 
+          data={data} 
+        />
+    )
+  }
+
   return (
     <div className="App" style={{ paddingTop: 50 }}>
       <Toolbar 
@@ -444,6 +471,7 @@ function App() {
         handleSaveAs={saveDataSetAs}
         handleEdit={handleEdit}
         networkData={networkData}
+        handleDisplayChange={handleDisplayChange}
       />
       <div className="app-child">
         <Box sx={{
@@ -474,12 +502,8 @@ function App() {
           flexGrow: "1",
           margin: "8px"
         }}>
-          <BarChart 
-            updateSelection={updateSelectionBar} 
-            selection={selection} 
-            conf={configuration()} 
-            data={data} 
-          />
+          {displayChart()}
+          
         </Box>
       </div>
 

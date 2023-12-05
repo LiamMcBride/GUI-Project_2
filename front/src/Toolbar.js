@@ -163,6 +163,16 @@ function Toolbar(props) {
             {saveAsMenu(saveAsToggle)}
             {editDropDown(editDropDownToggle)}
             <h1>Project 1</h1>
+            <div className='display-type-container'>
+                <label>
+                    <input onChange={props.handleDisplayChange} type="radio" name="display-type" value="bar"></input>
+                    Bar Chart
+                </label>
+                <label>
+                    <input onChange={props.handleDisplayChange} type="radio" name="display-type" value="dot"></input>
+                    Dot Plot
+                </label>
+            </div>
         </div>
     );
 }
