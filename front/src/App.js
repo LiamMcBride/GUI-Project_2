@@ -6,7 +6,6 @@ import { Box } from '@mui/system';
 import { useEffect, useState } from 'react';
 import './App.css';
 import BarChart from './BarChart';
-import DotPlot from './DotPlot';
 import Editor from './Editor';
 import './load.js'
 import {useApi, updateAPIData, createAPIData} from './NetworkHook';
@@ -408,27 +407,6 @@ function App() {
   }
   else if(error){
     return <h1>Error</h1>
-  }
-
-  const displayChart = () => {
-    if(displayType === 'bar'){
-      return (
-        <BarChart 
-          updateSelection={updateSelectionBar} 
-          selection={selection} 
-          conf={configuration()} 
-          data={data} 
-        />
-        )
-      }
-      return (
-        <DotPlot 
-          updateSelection={updateSelectionBar} 
-          selection={selection} 
-          conf={configuration()} 
-          data={data} 
-        />
-    )
   }
 
   return (
