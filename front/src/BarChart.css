@@ -45,7 +45,7 @@ svg {
     stroke-width: 0.1pt;
 }
 
-#bars rect {
+#bars rect, #bars circle {
     fill: dodgerblue;
 }
 

@@ -362,10 +362,7 @@ function App() {
   }
 
   const handleEdit = (e) => {
-    performEdit(e.target.id)
-  }
-
-  const performEdit = (id) => {
+    let id = (e.target.id)
 
     if(id === "cut"){
       console.log("cut")
@@ -397,24 +394,6 @@ function App() {
     setLoading(true)
   }
 
-  function handleKeyDown(e) {
-    if((e.ctrlKey || e.metaKey) && e.key === 'c'){
-      saveToClipBoard()
-      e.preventDefault()
-      
-    }
-    else if((e.ctrlKey || e.metaKey) && e.key === 'p'){
-      performEdit('paste')
-      e.preventDefault()
-      console.log("paste")
-    }
-    if((e.ctrlKey || e.metaKey) && e.key === 'x'){
-      performEdit('cut')
-      e.preventDefault()
-      console.log("cut")
-    }
-  }
-
   useEffect(() => {
     console.log("useEffect")
     if(!loading && error == null){
@@ -423,14 +402,6 @@ function App() {
       setData(tData)
     }
   }, [loading, error, networkData, fileName])
-
-  // useEffect(() => {
-  //   window.addEventListener('keydown', handleKeyDown);
-
-  //   return () => {
-  //     window.removeEventListener('keydown', handleKeyDown);
-  //   };
-  // }, []);
 
   if(loading){
     return <h1>Loading</h1>
@@ -502,7 +473,13 @@ function App() {
           flexGrow: "1",
           margin: "8px"
         }}>
-          {displayChart()}
+        <BarChart 
+          chartType={displayType}
+          updateSelection={updateSelectionBar} 
+          selection={selection} 
+          conf={configuration()} 
+          data={data} 
+        />
           
         </Box>
       </div>

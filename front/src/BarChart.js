@@ -18,14 +18,14 @@ function BarChart(props) {
     d3.select("#data-on-demand-text")
       .text(`${props.conf.keyName}: ${obj[props.conf.keyName]} ${props.conf.valueName}: ${obj[props.conf.valueName]}`)
       .attr("class", "")
-      d3.select("#data-on-demand")
+    d3.select("#data-on-demand")
       .attr("class", selected ? "selected-data-on-demand" : "not-selected-data-on-demand") //determines color of data on demand bar based on if it's selected
   }
 
   //hides the data on demand elements
   const removeHover = () => {
     d3.select("#data-on-demand-text")
-    .attr("class", "hidden")
+      .attr("class", "hidden")
     d3.select("#data-on-demand")
       .attr("class", "hidden")
   }
@@ -52,20 +52,20 @@ function BarChart(props) {
     //title
     const titleGroup = svg.append("g")
       .attr("id", "title")
-    
+
     titleGroup.append("text")
       .text(conf.title.text)
       .attr("text-anchor", "middle")
       .attr("x", (conf.viewBox.width / 2)) //anchored on middle so it's just width/2
       .attr("dy", "3pt")
-    
+
     //data on demand elements
     titleGroup.append("rect")
       .attr("id", "data-on-demand")
       .attr("y", "5px")
       .attr("x", (conf.viewBox.width / 2) - conf.viewBox.width * .30)
       .attr("class", "hidden")
-      
+
     titleGroup.append("text")
       .attr("text-anchor", "middle")
       .attr("id", "data-on-demand-text")
@@ -101,19 +101,36 @@ function BarChart(props) {
         .attr("y2", barY(d))
     })
 
-    //creates a bar for each data point
-    for (var d in data) {
-      d = Number(d)
-      bars.append("rect")
-        .attr("width", barWidth)
-        .attr("height", barHeight(data[d][conf.valueName]))
-        .attr("x", barX(d))
-        .attr("y", barY(data[d][conf.valueName]))
-        .attr("id", `bar_${d}`)
-        .on("click", props.updateSelection) //new additions to handle selection, data on demand, and coloring of the bar
-        .on("mouseover", hoverDetails)
-        .on("mouseout", removeHover)
-        .attr("class", selection.indexOf(d) != -1 ? "selected-bar" : "")
+    if (props.chartType === "bar") {
+      //creates a bar for each data point
+      for (var d in data) {
+        d = Number(d)
+        bars.append("rect")
+          .attr("width", barWidth)
+          .attr("height", barHeight(data[d][conf.valueName]))
+          .attr("x", barX(d))
+          .attr("y", barY(data[d][conf.valueName]))
+          .attr("id", `bar_${d}`)
+          .on("click", props.updateSelection) //new additions to handle selection, data on demand, and coloring of the bar
+          .on("mouseover", hoverDetails)
+          .on("mouseout", removeHover)
+          .attr("class", selection.indexOf(d) != -1 ? "selected-bar" : "")
+      }
+    }
+    else {
+      //creates a circle for each data point
+      for (var d in data) {
+        d = Number(d)
+        bars.append("circle")
+          .attr("r", 2)
+          .attr("cx", barX(d) + .5 * barWidth)
+          .attr("cy", barY(data[d][conf.valueName]))
+          .attr("id", `bar_${d}`)
+          .on("click", props.updateSelection) //new additions to handle selection, data on demand, and coloring of the bar
+          .on("mouseover", hoverDetails)
+          .on("mouseout", removeHover)
+          .attr("class", selection.indexOf(d) != -1 ? "selected-bar" : "")
+      }
     }
 
     const labels = svg.append("g")
@@ -151,7 +168,7 @@ function BarChart(props) {
 
       var index = 0
       const step = () => {
-        if (maxScale <= 10){
+        if (maxScale <= 10) {
           return .5
         }
         else {
