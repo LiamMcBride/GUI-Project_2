@@ -4,7 +4,6 @@ Liam McBride (mailmcbride)
 
 import { useState } from 'react'
 import './Toolbar.css'
-import {getNumberOfDataSets, getDataSetNameFromIndex} from './DataHandler.js'
 
 function Toolbar(props) {
     //drop down toggle variables

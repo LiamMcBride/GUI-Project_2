@@ -101,6 +101,7 @@ function BarChart(props) {
         .attr("y2", barY(d))
     })
 
+    // either plots bars or dots based on chart type prop
     if (props.chartType === "bar") {
       //creates a bar for each data point
       for (var d in data) {
